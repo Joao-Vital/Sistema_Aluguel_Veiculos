@@ -48,6 +48,14 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "Sistema de aluguel de veículos (C#, Entity Framework, SQL Server Express)"
     });
+
+    // Lê os comentários /// dos Controllers e DTOs e usa como descrição de cada endpoint no Swagger (item 3.1)
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+    }
 });
 
 var app = builder.Build();

@@ -46,6 +46,14 @@ Veiculo     1:N Aluguel
   | 4 | `GET /api/alugueis/filtro/cliente/{clienteId}`                      | JOIN explícito encadeando 3 tabelas (Aluguel, Veículo, Fabricante) | Histórico de aluguéis de um cliente |
   | 5 | `GET /api/alugueis/filtro/periodo?inicio=AAAA-MM-DD&fim=AAAA-MM-DD` | JOIN por navegação (`Include`) | Aluguéis iniciados dentro de um período |
 
+## O que está implementado (Etapa 3 — Testes e Documentação)
+
+- **Swagger documentado (3.1)**: todas as actions dos Controllers agora têm comentários `///` (`<summary>`, `<param>`, `<response>`), e o `Program.cs`/`.csproj` foram configurados para gerar o XML de documentação e carregá-lo no Swagger (`IncludeXmlComments`). Ao rodar o projeto, cada endpoint no Swagger UI aparece com descrição, parâmetros e códigos de resposta explicados — não só o nome da rota.
+- **Documento de endpoints (3.2)**: `Documentacao/Documentacao_Endpoints_API.docx` — lista todos os 30 endpoints (5 controllers de CRUD + 5 rotas de filtro), com método HTTP, parâmetros, corpo da requisição e códigos de resposta possíveis.
+- **Template do relatório de testes (3.3)**: `Documentacao/Template_Relatorio_Testes.docx` — um bloco por teste (29 testes cobrindo todos os endpoints, incluindo casos de erro como CPF duplicado, veículo indisponível e exclusão com vínculo), já com a requisição sugerida e o resultado esperado preenchidos. **Este arquivo precisa ser completado por você**: rode o projeto, execute cada teste no Swagger, preencha o código/corpo da resposta obtido e cole o print de tela no espaço indicado.
+
+> O relatório de testes (3.3) não pode ser gerado automaticamente porque depende de rodar o projeto na sua máquina com o SQL Express local e tirar prints reais do Swagger — é a única etapa que exige essa execução manual.
+
 ## Como rodar no Visual Studio 2022
 
 1. Descompacte o zip e abra `LocadoraVeiculos.sln` no Visual Studio 2022.

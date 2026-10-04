@@ -18,7 +18,10 @@ namespace LocadoraVeiculos.API.Controllers
             _context = context;
         }
 
+        /// <summary>Lista todas as categorias de veículo (ex.: Popular, SUV, Luxo).</summary>
+        /// <response code="200">Lista de categorias retornada com sucesso.</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CategoriaVeiculoReadDto>>> GetAll()
         {
             var categorias = await _context.CategoriasVeiculo
@@ -36,7 +39,13 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(categorias);
         }
 
+        /// <summary>Busca uma categoria de veículo pelo id.</summary>
+        /// <param name="id">Id da categoria.</param>
+        /// <response code="200">Categoria encontrada.</response>
+        /// <response code="404">Nenhuma categoria com esse id.</response>
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CategoriaVeiculoReadDto>> GetById(int id)
         {
             var categoria = await _context.CategoriasVeiculo
@@ -58,8 +67,15 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(categoria);
         }
 
+        /// <summary>Cadastra uma nova categoria de veículo.</summary>
+        /// <param name="dto">Nome, descrição (opcional) e valor da diária base.</param>
+        /// <response code="201">Categoria criada com sucesso.</response>
+        /// <response code="400">Dados inválidos (ex.: valor da diária menor ou igual a zero).</response>
+        /// <response code="409">Já existe uma categoria com esse nome.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult<CategoriaVeiculoReadDto>> Create(CategoriaVeiculoCreateDto dto)
         {
             var nomeExiste = await _context.CategoriasVeiculo.AnyAsync(c => c.Nome == dto.Nome);
@@ -88,7 +104,18 @@ namespace LocadoraVeiculos.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = categoria.CategoriaVeiculoId }, readDto);
         }
 
+        /// <summary>Atualiza os dados de uma categoria existente.</summary>
+        /// <param name="id">Id da categoria a atualizar.</param>
+        /// <param name="dto">Novos dados da categoria.</param>
+        /// <response code="204">Atualizada com sucesso.</response>
+        /// <response code="400">Dados inválidos.</response>
+        /// <response code="404">Categoria não encontrada.</response>
+        /// <response code="409">Já existe outra categoria com esse nome.</response>
         [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Update(int id, CategoriaVeiculoCreateDto dto)
         {
             var categoria = await _context.CategoriasVeiculo.FindAsync(id);
@@ -108,7 +135,15 @@ namespace LocadoraVeiculos.API.Controllers
             return NoContent();
         }
 
+        /// <summary>Exclui uma categoria (somente se não houver veículos vinculados a ela).</summary>
+        /// <param name="id">Id da categoria a excluir.</param>
+        /// <response code="204">Excluída com sucesso.</response>
+        /// <response code="404">Categoria não encontrada.</response>
+        /// <response code="409">Existem veículos cadastrados nessa categoria.</response>
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Delete(int id)
         {
             var categoria = await _context.CategoriasVeiculo.FindAsync(id);

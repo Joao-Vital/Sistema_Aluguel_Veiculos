@@ -18,6 +18,8 @@ namespace LocadoraVeiculos.API.Controllers
             _context = context;
         }
 
+        /// <summary>Lista todos os fabricantes cadastrados.</summary>
+        /// <response code="200">Lista de fabricantes retornada com sucesso.</response>
         // GET api/fabricantes
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -37,6 +39,10 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(fabricantes);
         }
 
+        /// <summary>Busca um fabricante pelo id.</summary>
+        /// <param name="id">Id do fabricante.</param>
+        /// <response code="200">Fabricante encontrado.</response>
+        /// <response code="404">Nenhum fabricante com esse id.</response>
         // GET api/fabricantes/5
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,6 +67,11 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(fabricante);
         }
 
+        /// <summary>Cadastra um novo fabricante.</summary>
+        /// <param name="dto">Nome (obrigatório) e país de origem (opcional).</param>
+        /// <response code="201">Fabricante criado com sucesso.</response>
+        /// <response code="400">Dados inválidos (ex.: nome em branco).</response>
+        /// <response code="409">Já existe um fabricante com esse nome.</response>
         // POST api/fabricantes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -92,6 +103,13 @@ namespace LocadoraVeiculos.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = fabricante.FabricanteId }, readDto);
         }
 
+        /// <summary>Atualiza os dados de um fabricante existente.</summary>
+        /// <param name="id">Id do fabricante a atualizar.</param>
+        /// <param name="dto">Novos dados do fabricante.</param>
+        /// <response code="204">Atualizado com sucesso (sem conteúdo de retorno).</response>
+        /// <response code="400">Dados inválidos.</response>
+        /// <response code="404">Fabricante não encontrado.</response>
+        /// <response code="409">Já existe outro fabricante com esse nome.</response>
         // PUT api/fabricantes/5
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -116,6 +134,11 @@ namespace LocadoraVeiculos.API.Controllers
             return NoContent();
         }
 
+        /// <summary>Exclui um fabricante (somente se não houver veículos vinculados a ele).</summary>
+        /// <param name="id">Id do fabricante a excluir.</param>
+        /// <response code="204">Excluído com sucesso.</response>
+        /// <response code="404">Fabricante não encontrado.</response>
+        /// <response code="409">Existem veículos cadastrados com esse fabricante.</response>
         // DELETE api/fabricantes/5
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

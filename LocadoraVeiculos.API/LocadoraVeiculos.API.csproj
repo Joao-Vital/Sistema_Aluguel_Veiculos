@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <RootNamespace>LocadoraVeiculos.API</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn> <!-- não exige /// em TODOS os membros públicos (ex: DTOs) -->
   </PropertyGroup>
 
   <ItemGroup>

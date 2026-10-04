@@ -22,8 +22,11 @@ namespace LocadoraVeiculos.API.Controllers
         // CRUD
         // ---------------------------------------------------------------
 
+        /// <summary>Lista todos os aluguéis (abertos e finalizados), mais recentes primeiro.</summary>
+        /// <response code="200">Lista de aluguéis retornada com sucesso.</response>
         // GET api/alugueis
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<AluguelReadDto>>> GetAll()
         {
             var alugueis = await _context.Alugueis
@@ -36,8 +39,14 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(alugueis.Select(MapToReadDto));
         }
 
+        /// <summary>Busca um aluguel pelo id.</summary>
+        /// <param name="id">Id do aluguel.</param>
+        /// <response code="200">Aluguel encontrado.</response>
+        /// <response code="404">Nenhum aluguel com esse id.</response>
         // GET api/alugueis/5
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AluguelReadDto>> GetById(int id)
         {
             var aluguel = await _context.Alugueis
@@ -53,6 +62,11 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(MapToReadDto(aluguel));
         }
 
+        /// <summary>
+        /// Abre um novo aluguel: valida cliente e veículo, exige que o veículo esteja disponível,
+        /// marca o veículo como indisponível e calcula o valor total estimado (diária × dias).
+        /// </summary>
+        /// <param name="dto">Cliente, veículo, data de início, data prevista de devolução e, opcionalmente, o valor da diária.</param>
         // POST api/alugueis — abre um novo aluguel
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -103,6 +117,12 @@ namespace LocadoraVeiculos.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = aluguel.AluguelId }, MapToReadDto(criado));
         }
 
+        /// <summary>
+        /// Registra a devolução de um veículo alugado: grava a quilometragem final, recalcula o valor
+        /// total pelo período efetivamente utilizado e libera o veículo (fica disponível novamente).
+        /// </summary>
+        /// <param name="id">Id do aluguel a finalizar.</param>
+        /// <param name="dto">Quilometragem final e, opcionalmente, a data/hora da devolução (padrão: agora).</param>
         // PATCH api/alugueis/5/devolucao — registra a devolução do veículo
         [HttpPatch("{id:int}/devolucao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -149,6 +169,8 @@ namespace LocadoraVeiculos.API.Controllers
             return Ok(MapToReadDto(atualizado));
         }
 
+        /// <summary>Cancela/exclui um aluguel ainda em aberto (não permite excluir um já devolvido) e libera o veículo.</summary>
+        /// <param name="id">Id do aluguel a cancelar.</param>
         // DELETE api/alugueis/5 — cancela um aluguel ainda em aberto
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -181,7 +203,12 @@ namespace LocadoraVeiculos.API.Controllers
         /// Filtro 4: todos os aluguéis de um cliente, com dados do veículo e do fabricante.
         /// JOIN explícito (cláusula "join" do LINQ) encadeando três tabelas — INNER JOIN.
         /// </summary>
+        /// <param name="clienteId">Id do cliente.</param>
+        /// <response code="200">Histórico de aluguéis do cliente (pode vir vazio).</response>
+        /// <response code="404">Cliente não encontrado.</response>
         [HttpGet("filtro/cliente/{clienteId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<AluguelReadDto>>> FiltroPorCliente(int clienteId)
         {
             var clienteExiste = await _context.Clientes.AnyAsync(c => c.ClienteId == clienteId);
@@ -222,7 +249,13 @@ namespace LocadoraVeiculos.API.Controllers
         /// Filtro 5: aluguéis iniciados dentro de um período (inclusive), com dados de cliente e veículo.
         /// JOIN por navegação (Include) — INNER JOIN entre Aluguel, Cliente e Veiculo/Fabricante.
         /// </summary>
+        /// <param name="inicio">Data inicial do período (formato AAAA-MM-DD).</param>
+        /// <param name="fim">Data final do período (formato AAAA-MM-DD).</param>
+        /// <response code="200">Aluguéis iniciados dentro do período (pode vir vazio).</response>
+        /// <response code="400">Data "fim" anterior à data "inicio".</response>
         [HttpGet("filtro/periodo")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<AluguelReadDto>>> FiltroPorPeriodo([FromQuery] DateTime inicio, [FromQuery] DateTime fim)
         {
             if (fim < inicio)
