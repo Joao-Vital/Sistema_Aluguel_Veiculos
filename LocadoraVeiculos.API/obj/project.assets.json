@@ -4548,11 +4548,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Pichau\\Desktop\\Pasta PUC\\Anotações da Puc\\4- Periodo\\Tecnologias para Análise e Desenvolvimento de Sistemas\\Tarefas\\teste\\LocadoraVeiculos\\LocadoraVeiculos.API\\LocadoraVeiculos.API.csproj",
+      "projectUniqueName": "C:\\Users\\Pichau\\Desktop\\Sistema_Aluguel_Veiculos\\Sistema_Aluguel_Veiculos\\LocadoraVeiculos.API\\LocadoraVeiculos.API.csproj",
       "projectName": "LocadoraVeiculos.API",
-      "projectPath": "C:\\Users\\Pichau\\Desktop\\Pasta PUC\\Anotações da Puc\\4- Periodo\\Tecnologias para Análise e Desenvolvimento de Sistemas\\Tarefas\\teste\\LocadoraVeiculos\\LocadoraVeiculos.API\\LocadoraVeiculos.API.csproj",
+      "projectPath": "C:\\Users\\Pichau\\Desktop\\Sistema_Aluguel_Veiculos\\Sistema_Aluguel_Veiculos\\LocadoraVeiculos.API\\LocadoraVeiculos.API.csproj",
       "packagesPath": "C:\\Users\\Pichau\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Pichau\\Desktop\\Pasta PUC\\Anotações da Puc\\4- Periodo\\Tecnologias para Análise e Desenvolvimento de Sistemas\\Tarefas\\teste\\LocadoraVeiculos\\LocadoraVeiculos.API\\obj\\",
+      "outputPath": "C:\\Users\\Pichau\\Desktop\\Sistema_Aluguel_Veiculos\\Sistema_Aluguel_Veiculos\\LocadoraVeiculos.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Pichau\\AppData\\Roaming\\NuGet\\NuGet.Config"

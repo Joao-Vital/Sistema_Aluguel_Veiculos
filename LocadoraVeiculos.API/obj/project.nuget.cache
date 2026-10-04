@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+pYwC4cQeSA=",
+  "dgSpecHash": "o8EFZScoonU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Pichau\\Desktop\\Pasta PUC\\Anotações da Puc\\4- Periodo\\Tecnologias para Análise e Desenvolvimento de Sistemas\\Tarefas\\teste\\LocadoraVeiculos\\LocadoraVeiculos.API\\LocadoraVeiculos.API.csproj",
+  "projectFilePath": "C:\\Users\\Pichau\\Desktop\\Sistema_Aluguel_Veiculos\\Sistema_Aluguel_Veiculos\\LocadoraVeiculos.API\\LocadoraVeiculos.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Pichau\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Pichau\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
