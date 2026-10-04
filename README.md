@@ -52,22 +52,6 @@ Veiculo     1:N Aluguel
 - **Documento de endpoints (3.2)**: `Documentacao/Documentacao_Endpoints_API.docx` — lista todos os 30 endpoints (5 controllers de CRUD + 5 rotas de filtro), com método HTTP, parâmetros, corpo da requisição e códigos de resposta possíveis.
 - **Template do relatório de testes (3.3)**: `Documentacao/Template_Relatorio_Testes.docx` — um bloco por teste (29 testes cobrindo todos os endpoints, incluindo casos de erro como CPF duplicado, veículo indisponível e exclusão com vínculo), já com a requisição sugerida e o resultado esperado preenchidos. **Este arquivo precisa ser completado por você**: rode o projeto, execute cada teste no Swagger, preencha o código/corpo da resposta obtido e cole o print de tela no espaço indicado.
 
-> O relatório de testes (3.3) não pode ser gerado automaticamente porque depende de rodar o projeto na sua máquina com o SQL Express local e tirar prints reais do Swagger — é a única etapa que exige essa execução manual.
-
-## Como rodar no Visual Studio 2022
-
-1. Descompacte o zip e abra `LocadoraVeiculos.sln` no Visual Studio 2022.
-2. Deixe o NuGet restaurar os pacotes automaticamente ao abrir a solução (ou rode `dotnet restore` pela linha de comando).
-3. Verifique/edite a connection string em `appsettings.json` se sua instância do SQL Express tiver outro nome (o padrão `.\SQLEXPRESS` funciona para a instância padrão local).
-4. No **Console do Gerenciador de Pacotes**, selecione o projeto `LocadoraVeiculos.API` e rode:
-   ```
-   Add-Migration InicialLocadora
-   Update-Database
-   ```
-   Isso cria o banco `LocadoraVeiculosDB` no seu SQL Express com as 5 tabelas, os relacionamentos e os dados de seed (fabricantes e categorias).
-5. Pressione **F5** (ou Ctrl+F5). O Swagger abre automaticamente na raiz (`http://localhost:5236` ou porta equivalente), já com todas as rotas de CRUD e de filtro prontas para teste.
-
-> Sugestão de ordem de teste no Swagger: crie um Fabricante e uma Categoria (ou use os dados de seed) → crie um Veículo → crie um Cliente → crie um Aluguel → teste os filtros → registre a devolução do aluguel.
 
 ## Estrutura de pastas
 
