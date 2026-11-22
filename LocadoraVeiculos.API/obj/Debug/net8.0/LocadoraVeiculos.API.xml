@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LocadoraVeiculos.API</name>
+    </assembly>
+    <members>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.GetAll">
+            <summary>Lista todos os aluguéis (abertos e finalizados), mais recentes primeiro.</summary>
+            <response code="200">Lista de aluguéis retornada com sucesso.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.GetById(System.Int32)">
+            <summary>Busca um aluguel pelo id.</summary>
+            <param name="id">Id do aluguel.</param>
+            <response code="200">Aluguel encontrado.</response>
+            <response code="404">Nenhum aluguel com esse id.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.Create(LocadoraVeiculos.API.DTOs.AluguelCreateDto)">
+            <summary>
+            Abre um novo aluguel: valida cliente e veículo, exige que o veículo esteja disponível,
+            marca o veículo como indisponível e calcula o valor total estimado (diária × dias).
+            </summary>
+            <param name="dto">Cliente, veículo, data de início, data prevista de devolução e, opcionalmente, o valor da diária.</param>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.RegistrarDevolucao(System.Int32,LocadoraVeiculos.API.DTOs.AluguelDevolucaoDto)">
+            <summary>
+            Registra a devolução de um veículo alugado: grava a quilometragem final, recalcula o valor
+            total pelo período efetivamente utilizado e libera o veículo (fica disponível novamente).
+            </summary>
+            <param name="id">Id do aluguel a finalizar.</param>
+            <param name="dto">Quilometragem final e, opcionalmente, a data/hora da devolução (padrão: agora).</param>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.Delete(System.Int32)">
+            <summary>Cancela/exclui um aluguel ainda em aberto (não permite excluir um já devolvido) e libera o veículo.</summary>
+            <param name="id">Id do aluguel a cancelar.</param>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.FiltroPorCliente(System.Int32)">
+            <summary>
+            Filtro 4: todos os aluguéis de um cliente, com dados do veículo e do fabricante.
+            JOIN explícito (cláusula "join" do LINQ) encadeando três tabelas — INNER JOIN.
+            </summary>
+            <param name="clienteId">Id do cliente.</param>
+            <response code="200">Histórico de aluguéis do cliente (pode vir vazio).</response>
+            <response code="404">Cliente não encontrado.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.FiltroPorPeriodo(System.DateTime,System.DateTime)">
+            <summary>
+            Filtro 5: aluguéis iniciados dentro de um período (inclusive), com dados de cliente e veículo.
+            JOIN por navegação (Include) — INNER JOIN entre Aluguel, Cliente e Veiculo/Fabricante.
+            </summary>
+            <param name="inicio">Data inicial do período (formato AAAA-MM-DD).</param>
+            <param name="fim">Data final do período (formato AAAA-MM-DD).</param>
+            <response code="200">Aluguéis iniciados dentro do período (pode vir vazio).</response>
+            <response code="400">Data "fim" anterior à data "inicio".</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.AlugueisController.CalcularDias(System.DateTime,System.DateTime)">
+            <summary>
+            Calcula a quantidade de diárias cobradas entre duas datas, sempre arredondando
+            para cima e cobrando o mínimo de 1 diária.
+            </summary>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.CategoriasVeiculoController.GetAll">
+            <summary>Lista todas as categorias de veículo (ex.: Popular, SUV, Luxo).</summary>
+            <response code="200">Lista de categorias retornada com sucesso.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.CategoriasVeiculoController.GetById(System.Int32)">
+            <summary>Busca uma categoria de veículo pelo id.</summary>
+            <param name="id">Id da categoria.</param>
+            <response code="200">Categoria encontrada.</response>
+            <response code="404">Nenhuma categoria com esse id.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.CategoriasVeiculoController.Create(LocadoraVeiculos.API.DTOs.CategoriaVeiculoCreateDto)">
+            <summary>Cadastra uma nova categoria de veículo.</summary>
+            <param name="dto">Nome, descrição (opcional) e valor da diária base.</param>
+            <response code="201">Categoria criada com sucesso.</response>
+            <response code="400">Dados inválidos (ex.: valor da diária menor ou igual a zero).</response>
+            <response code="409">Já existe uma categoria com esse nome.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.CategoriasVeiculoController.Update(System.Int32,LocadoraVeiculos.API.DTOs.CategoriaVeiculoCreateDto)">
+            <summary>Atualiza os dados de uma categoria existente.</summary>
+            <param name="id">Id da categoria a atualizar.</param>
+            <param name="dto">Novos dados da categoria.</param>
+            <response code="204">Atualizada com sucesso.</response>
+            <response code="400">Dados inválidos.</response>
+            <response code="404">Categoria não encontrada.</response>
+            <response code="409">Já existe outra categoria com esse nome.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.CategoriasVeiculoController.Delete(System.Int32)">
+            <summary>Exclui uma categoria (somente se não houver veículos vinculados a ela).</summary>
+            <param name="id">Id da categoria a excluir.</param>
+            <response code="204">Excluída com sucesso.</response>
+            <response code="404">Categoria não encontrada.</response>
+            <response code="409">Existem veículos cadastrados nessa categoria.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.ClientesController.GetAll">
+            <summary>Lista todos os clientes cadastrados.</summary>
+            <response code="200">Lista de clientes retornada com sucesso.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.ClientesController.GetById(System.Int32)">
+            <summary>Busca um cliente pelo id.</summary>
+            <param name="id">Id do cliente.</param>
+            <response code="200">Cliente encontrado.</response>
+            <response code="404">Nenhum cliente com esse id.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.ClientesController.Create(LocadoraVeiculos.API.DTOs.ClienteCreateDto)">
+            <summary>Cadastra um novo cliente.</summary>
+            <param name="dto">Nome, CPF (11 dígitos, único) e e-mail (único) são obrigatórios; telefone é opcional.</param>
+            <response code="201">Cliente criado com sucesso.</response>
+            <response code="400">Dados inválidos (ex.: CPF fora do formato, e-mail inválido).</response>
+            <response code="409">Já existe um cliente com esse CPF ou e-mail.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.ClientesController.Update(System.Int32,LocadoraVeiculos.API.DTOs.ClienteUpdateDto)">
+            <summary>Atualiza os dados de um cliente existente.</summary>
+            <param name="id">Id do cliente a atualizar.</param>
+            <param name="dto">Novos dados do cliente.</param>
+            <response code="204">Atualizado com sucesso.</response>
+            <response code="400">Dados inválidos.</response>
+            <response code="404">Cliente não encontrado.</response>
+            <response code="409">CPF ou e-mail já usados por outro cliente.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.ClientesController.Delete(System.Int32)">
+            <summary>Exclui um cliente (somente se não houver aluguéis vinculados a ele).</summary>
+            <param name="id">Id do cliente a excluir.</param>
+            <response code="204">Excluído com sucesso.</response>
+            <response code="404">Cliente não encontrado.</response>
+            <response code="409">Existem aluguéis registrados para esse cliente.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.ClientesController.ValidarCpfEmailUnicos(System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Retorna uma mensagem de erro caso CPF ou e-mail já estejam em uso por outro cliente, ou null se estiver tudo certo.
+            </summary>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.FabricantesController.GetAll">
+            <summary>Lista todos os fabricantes cadastrados.</summary>
+            <response code="200">Lista de fabricantes retornada com sucesso.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.FabricantesController.GetById(System.Int32)">
+            <summary>Busca um fabricante pelo id.</summary>
+            <param name="id">Id do fabricante.</param>
+            <response code="200">Fabricante encontrado.</response>
+            <response code="404">Nenhum fabricante com esse id.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.FabricantesController.Create(LocadoraVeiculos.API.DTOs.FabricanteCreateDto)">
+            <summary>Cadastra um novo fabricante.</summary>
+            <param name="dto">Nome (obrigatório) e país de origem (opcional).</param>
+            <response code="201">Fabricante criado com sucesso.</response>
+            <response code="400">Dados inválidos (ex.: nome em branco).</response>
+            <response code="409">Já existe um fabricante com esse nome.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.FabricantesController.Update(System.Int32,LocadoraVeiculos.API.DTOs.FabricanteCreateDto)">
+            <summary>Atualiza os dados de um fabricante existente.</summary>
+            <param name="id">Id do fabricante a atualizar.</param>
+            <param name="dto">Novos dados do fabricante.</param>
+            <response code="204">Atualizado com sucesso (sem conteúdo de retorno).</response>
+            <response code="400">Dados inválidos.</response>
+            <response code="404">Fabricante não encontrado.</response>
+            <response code="409">Já existe outro fabricante com esse nome.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.FabricantesController.Delete(System.Int32)">
+            <summary>Exclui um fabricante (somente se não houver veículos vinculados a ele).</summary>
+            <param name="id">Id do fabricante a excluir.</param>
+            <response code="204">Excluído com sucesso.</response>
+            <response code="404">Fabricante não encontrado.</response>
+            <response code="409">Existem veículos cadastrados com esse fabricante.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.GetAll">
+            <summary>Lista todos os veículos cadastrados, com dados de fabricante e categoria.</summary>
+            <response code="200">Lista de veículos retornada com sucesso.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.GetById(System.Int32)">
+            <summary>Busca um veículo pelo id.</summary>
+            <param name="id">Id do veículo.</param>
+            <response code="200">Veículo encontrado.</response>
+            <response code="404">Nenhum veículo com esse id.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.Create(LocadoraVeiculos.API.DTOs.VeiculoCreateDto)">
+            <summary>Cadastra um novo veículo.</summary>
+            <param name="dto">Modelo, placa (única), ano, quilometragem, fabricante e categoria (devem existir).</param>
+            <response code="201">Veículo criado com sucesso.</response>
+            <response code="400">Dados inválidos (ex.: ano fora do intervalo aceito).</response>
+            <response code="404">Fabricante ou categoria informados não existem.</response>
+            <response code="409">Já existe um veículo com essa placa.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.Update(System.Int32,LocadoraVeiculos.API.DTOs.VeiculoUpdateDto)">
+            <summary>Atualiza os dados de um veículo existente, incluindo disponibilidade.</summary>
+            <param name="id">Id do veículo a atualizar.</param>
+            <param name="dto">Novos dados do veículo.</param>
+            <response code="204">Atualizado com sucesso.</response>
+            <response code="400">Dados inválidos.</response>
+            <response code="404">Veículo, fabricante ou categoria não encontrados.</response>
+            <response code="409">Já existe outro veículo com essa placa.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.Delete(System.Int32)">
+            <summary>Exclui um veículo (somente se não houver aluguéis vinculados a ele).</summary>
+            <param name="id">Id do veículo a excluir.</param>
+            <response code="204">Excluído com sucesso.</response>
+            <response code="404">Veículo não encontrado.</response>
+            <response code="409">Existem aluguéis registrados para esse veículo.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.FiltroDisponiveisPorCategoria(System.Int32)">
+            <summary>
+            Filtro 1: veículos disponíveis de uma determinada categoria.
+            JOIN por navegação (Include) — o EF traduz para INNER JOIN entre Veiculo, Fabricante e CategoriaVeiculo.
+            </summary>
+            <param name="categoriaId">Id da categoria de veículo.</param>
+            <response code="200">Lista de veículos disponíveis dessa categoria.</response>
+            <response code="404">Categoria não encontrada.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.FiltroPorFabricanteComEstatisticas(System.Int32)">
+            <summary>
+            Filtro 2: veículos de um fabricante, com a quantidade de aluguéis e o total de dias alugados.
+            JOIN explícito (cláusula "join" do LINQ) — INNER JOIN entre Veiculo e Aluguel.
+            </summary>
+            <param name="fabricanteId">Id do fabricante.</param>
+            <response code="200">Estatísticas de aluguel por veículo do fabricante.</response>
+            <response code="404">Fabricante não encontrado.</response>
+        </member>
+        <member name="M:LocadoraVeiculos.API.Controllers.VeiculosController.FiltroVeiculosSemAluguel">
+            <summary>
+            Filtro 3: veículos que nunca foram alugados (nenhum registro em Aluguel).
+            JOIN externo (GroupJoin + DefaultIfEmpty) — equivalente a um LEFT JOIN entre Veiculo e Aluguel.
+            </summary>
+            <response code="200">Lista de veículos sem nenhum aluguel (pode vir vazia).</response>
+        </member>
+        <member name="P:LocadoraVeiculos.API.DTOs.AluguelCreateDto.ValorDiaria">
+            <summary>
+            Se não informado, o valor da diária da categoria do veículo é usado como padrão.
+            </summary>
+        </member>
+        <member name="P:LocadoraVeiculos.API.DTOs.AluguelDevolucaoDto.DataDevolucao">
+            <summary>
+            Opcional. Se não informado, é usada a data/hora atual do servidor.
+            </summary>
+        </member>
+        <member name="T:LocadoraVeiculos.API.Middleware.ExceptionHandlingMiddleware">
+            <summary>
+            Captura qualquer exceção não tratada nos Controllers e devolve uma resposta
+            JSON padronizada (em vez de estourar uma stack trace para o cliente da API).
+            </summary>
+        </member>
+        <member name="T:LocadoraVeiculos.API.Migrations.Inicial">
+            <inheritdoc />
+        </member>
+        <member name="M:LocadoraVeiculos.API.Migrations.Inicial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LocadoraVeiculos.API.Migrations.Inicial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LocadoraVeiculos.API.Migrations.Inicial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="P:LocadoraVeiculos.API.Models.Aluguel.DataDevolucao">
+            Data em que o veículo foi efetivamente devolvido. Nula enquanto o aluguel está em aberto.
+        </member>
+        <member name="P:LocadoraVeiculos.API.Models.Aluguel.QuilometragemFinal">
+            Nula até a devolução do veículo.
+        </member>
+        <member name="T:LocadoraVeiculos.API.Models.CategoriaVeiculo">
+            Entidade adicional (5ª entidade, exigida pelo item 1.5).
+            Classifica o veículo (Popular, Intermediário, SUV, Luxo etc.) e
+            define um valor de diária sugerido/base para a categoria.
+        </member>
+        <member name="T:LocadoraVeiculos.API.Models.Fabricante">
+            Representa a marca/montadora do veículo (ex: Chevrolet, Fiat, Toyota).
+        </member>
+        <member name="P:LocadoraVeiculos.API.Models.Veiculo.Quilometragem">
+            Quilometragem atual/geral do veículo (independe do aluguel específico).
+        </member>
+    </members>
+</doc>

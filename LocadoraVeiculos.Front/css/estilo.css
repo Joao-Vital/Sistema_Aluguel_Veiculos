@@ -1,0 +1,4 @@
+body { background: #f4f6f9; }
+.nav-link.active { font-weight: 700; border-bottom: 2px solid #0d6efd; }
+.table td, .table th { vertical-align: middle; white-space: nowrap; }
+.card-consulta code { font-size: .8rem; }

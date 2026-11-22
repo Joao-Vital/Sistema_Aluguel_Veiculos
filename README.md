@@ -84,3 +84,19 @@ LocadoraVeiculos.API/
  └─ Data/
      └─ LocadoraContext.cs
 ```
+
+
+## Trabalho Prático 2 — Front-end (`LocadoraVeiculos.Front/`)
+
+Front-end em HTML + Bootstrap + JavaScript que consome a API acima **somente com `fetch`**.
+
+**Como rodar**
+1. Rode a API (perfil `http`, porta 5236) no Visual Studio ou com `dotnet run` na pasta `LocadoraVeiculos.API`.
+2. Abra `LocadoraVeiculos.Front/index.html` (de preferência pela extensão Live Server do VS Code).
+
+**Telas**
+- **Veículos, Fabricantes, Categorias, Clientes e Aluguéis**: listagem, cadastro, edição e exclusão com confirmação, com filtros em 2 ou mais campos por entidade.
+- **Aluguéis**: criação, registro de devolução (PATCH) e exclusão (a API não tem PUT para aluguel).
+- **Consultas**: as 5 rotas de filtro com JOIN da etapa 2, mostrando a rota chamada e o resultado.
+
+**Mudanças na API para o front:** CORS liberado e redirecionamento HTTPS desligado em desenvolvimento (`Program.cs`).

@@ -38,6 +38,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.AddDbContext<LocadoraContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocadoraConnection")));
 
+// CORS: permite que o front-end (outra pasta/porta) chame a API com fetch
+builder.Services.AddCors(o => o.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -75,7 +78,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// Em desenvolvimento o front chama http://localhost:5236; o redirecionamento para HTTPS quebraria o CORS
+if (!app.Environment.IsDevelopment()) app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
