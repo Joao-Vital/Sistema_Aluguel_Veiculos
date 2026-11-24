@@ -48,7 +48,7 @@ const CONS = [
   { t: "Veículos disponíveis por categoria", j: "JOIN por navegação (Include)", p: [["c", "Categoria", "categorias", x => x.nome]], u: p => `/veiculos/filtro/disponiveis-por-categoria/${p.c}` },
   { t: "Veículos de um fabricante (aluguéis e valor arrecadado)", j: "JOIN explícito (join do LINQ)", p: [["f", "Fabricante", "fabricantes", x => x.nome]], u: p => `/veiculos/filtro/fabricante/${p.f}` },
   { t: "Veículos que nunca foram alugados", j: "LEFT JOIN (GroupJoin + DefaultIfEmpty)", p: [], u: () => "/veiculos/filtro/sem-aluguel" },
-  { t: "Histórico de aluguéis de um cliente", j: "JOIN encadeando 3 tabelas", p: [["c", "Cliente", "clientes", x => `${x.nome} (${x.cpf})`]], u: p => `/alugueis/filtro/cliente/${p.c}` },
+  { t: "Histórico de aluguéis de um cliente", j: "3 JOINs encadeados (4 tabelas)", p: [["c", "Cliente", "clientes", x => `${x.nome} (${x.cpf})`]], u: p => `/alugueis/filtro/cliente/${p.c}` },
   { t: "Aluguéis iniciados em um período", j: "JOIN por navegação (Include)", p: [["i", "De", "date"], ["f", "Até", "date"]], u: p => `/alugueis/filtro/periodo?inicio=${p.i}&fim=${p.f}` }
 ];
 
@@ -100,7 +100,7 @@ async function lista(chave) {
   const fil = e.filtros.map(([k, r, t, f], i) => `<div class="col-md-3"><label class="form-label small mb-0">${r}</label>` + (t === "texto"
     ? `<input class="form-control form-control-sm filtro" data-i="${i}" placeholder="Buscar...">`
     : `<select class="form-select form-select-sm filtro" data-i="${i}"><option value="">Todos</option>${[...new Set(dados.map(d => String(d[k] ?? "")))].filter(v => v).sort().map(v => `<option value="${esc(v)}">${esc(f ? f(v) : v)}</option>`).join("")}</select>`) + "</div>").join("");
-  main.innerHTML = `<div class="d-flex justify-content-between align-items-center mb-3"><h3 class="mb-0">${e.nome}</h3><button class="btn btn-success" id="novo">+ Novo ${e.sing}</button></div>
+  main.innerHTML = `<div class="d-flex justify-content-between align-items-center mb-3"><h3 class="mb-0">${e.nome}</h3><button class="btn btn-success" id="novo">+ ${e.sing === "categoria" ? "Nova" : "Novo"} ${e.sing}</button></div>
     <div class="card card-body mb-3"><div class="row g-2">${fil}</div></div>
     <div class="card"><div class="table-responsive"><table class="table table-hover mb-0"><thead class="table-light"><tr>${e.cols.map(c => `<th>${c[1]}</th>`).join("")}<th>Ações</th></tr></thead><tbody id="corpo"></tbody></table></div></div>
     <p class="small text-muted mt-2" id="total"></p>`;
@@ -117,12 +117,12 @@ async function lista(chave) {
   const recarregar = () => lista(chave);
   document.querySelectorAll(".filtro").forEach(el => el.addEventListener("input", atualizar));
   atualizar();
-  $("#novo").onclick = () => formulario({ titulo: `Novo ${e.sing}`, campos: e.campos.filter(c => !c.soEdicao), salvar: b => http("POST", "/" + e.rota, b) }, recarregar);
+  $("#novo").onclick = () => formulario({ titulo: `${e.sing === "categoria" ? "Nova" : "Novo"} ${e.sing}`, campos: e.campos.filter(c => !c.soEdicao), salvar: b => http("POST", "/" + e.rota, b) }, recarregar);
   $("#corpo").onclick = ev => {
     const bt = ev.target.closest("button"); if (!bt) return;
     const id = bt.dataset.id, d = dados.find(x => x[e.id] == id);
     if (bt.dataset.a === "editar") formulario({ titulo: `Editar ${e.sing}`, campos: e.campos, valores: d, salvar: b => http("PUT", `/${e.rota}/${id}`, b) }, recarregar);
-    if (bt.dataset.a === "excluir") confirmar(`Tem certeza de que deseja excluir este ${e.sing}? Esta ação não pode ser desfeita.`, () => http("DELETE", `/${e.rota}/${id}`), recarregar);
+    if (bt.dataset.a === "excluir") confirmar(`Tem certeza de que deseja excluir ${e.sing === "categoria" ? "esta" : "este"} ${e.sing}? Esta ação não pode ser desfeita.`, () => http("DELETE", `/${e.rota}/${id}`), recarregar);
     if (bt.dataset.a === "devolver") formulario({ titulo: `Registrar devolução - ${d.veiculoModelo}`, campos: [{ n: "quilometragemFinal", r: "Quilometragem final", t: "number", req: 1 }, { n: "dataDevolucao", r: "Data da devolução (vazio = hoje)", t: "date" }], salvar: b => http("PATCH", `/alugueis/${id}/devolucao`, b) }, recarregar);
   };
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LocadoraVeiculos.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e04078391e56be462e05fd561c9a81537898e5de")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9bb4082d3a39a3cb73b1ad5ffdc59e03dd31db34")]
 [assembly: System.Reflection.AssemblyProductAttribute("LocadoraVeiculos.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LocadoraVeiculos.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
